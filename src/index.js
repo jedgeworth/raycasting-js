@@ -27,6 +27,7 @@ const rayPoints = [];           // Vector2[]
 const mapIntersectPoints = [];  // Vector2[]
 const rayLengths = [];          // Float[]
 const rayTexCoords = [];        // Int[]
+const rayWallShades = [];
 
 const mapPixelSize = 640;
 const mapResolution = 64;
@@ -44,10 +45,12 @@ const mapData = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
+let drawCallsCount = 0;
 
 let gameMap = null;
 let projectionPlane = null;
 let player = null;
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -58,10 +61,14 @@ document.addEventListener("DOMContentLoaded", () => {
     initWorld();
 
     setInterval(() => {
+        drawCallsCount = 0;
+
         handleKeys();
         drawMap();
         castRays();
         drawViewport();
+
+        document.getElementById('drawCallsCount').textContent = drawCallsCount;
     }, 15);
 
 });
@@ -92,6 +99,7 @@ function initWorld() {
         mapIntersectPoints[i] = new Vector2();
         rayLengths[i] = 0.0;
         rayTexCoords[i] = 0;
+        rayWallShades[i] = 0;
     }
 }
 
@@ -138,9 +146,6 @@ function castRays() {
         // Determine ray direction
         rayCastingUp = (rayAngle > 0.0 && rayAngle <= 180.0);
         rayCastingRight = !(rayAngle > 90.0 && rayAngle <= 270.0);
-
-        document.getElementById('isUp').textContent = rayCastingUp ? 'Up' : 'Down';
-        document.getElementById('isRight').textContent = rayCastingRight ? 'Right' : 'Left';
 
         //
         // Test for horizontal intersections
@@ -234,6 +239,7 @@ function castRays() {
             rayLengths[ray] = vDist;
             rayPoints[ray] = vRayPoint;
             rayTexCoords[ray] = parseInt(vRayPoint.y % mapResolution);
+            rayWallShades[ray] = 1;
 
             debugLineEndPoint.x = vRayPoint.x;
             debugLineEndPoint.y = vRayPoint.y;
@@ -241,6 +247,7 @@ function castRays() {
             rayLengths[ray] = hDist;
             rayPoints[ray] = hRayPoint;
             rayTexCoords[ray] = parseInt(hRayPoint.x % mapResolution);
+            rayWallShades[ray] = 0;
 
             debugLineEndPoint.x = hRayPoint.x;
             debugLineEndPoint.y = hRayPoint.y;
@@ -287,6 +294,8 @@ function drawViewport() {
 
     let sliceTexScale = 0;
 
+    let wallShade = 'white';
+
     for (let col = 0; col < projectionPlane.width; col += 1) {
         sliceHeight = parseInt(mapResolution / rayLengths[col] * 100);
         sliceHeightHalf = sliceHeight / 2;
@@ -300,7 +309,9 @@ function drawViewport() {
                 break;
             }
 
-            drawPixel(viewportCtx, projectionPlane.width - col, columnStart + pixel, 'white');
+            wallShade = (rayWallShades[col]) ? 'white' : 'gray';
+
+            drawPixel(viewportCtx, projectionPlane.width - col, columnStart + pixel, wallShade);
         }
     }
 }
@@ -320,6 +331,8 @@ function drawMapRect(ctx, mapRect) {
     ctx.fillRect(mapRect.x, mapRect.y, mapRect.w, mapRect.h);
     ctx.rect(mapRect.x, mapRect.y, mapRect.w, mapRect.h);
     ctx.stroke();
+
+    drawCallsCount += 2;
 }
 
 function drawRect(ctx, x, y, w, h, color) {
@@ -329,14 +342,17 @@ function drawRect(ctx, x, y, w, h, color) {
     ctx.beginPath();
     ctx.fillRect(x, y, w, h);
     ctx.stroke();
+
+    drawCallsCount += 1;
 }
 
 function drawPixel(ctx, x, y, color) {
 
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, 1, 1);
-    ctx.stroke();
-    ctx.fillStyle = "#000";
+    ctx.strokeStyle = color;
+    ctx.strokeRect(x, y, 1, 1);
+
+    ctx.strokeStyle = '#000';
+    drawCallsCount += 1;
 }
 
 function drawCircle(ctx, x, y, radius, color) {
@@ -350,6 +366,7 @@ function drawCircle(ctx, x, y, radius, color) {
     ctx.stroke();
 
     ctx.strokeStyle = "#000";
+    drawCallsCount += 1;
 }
 
 function drawLine(ctx, x, y, xEnd, yEnd, color) {
@@ -364,6 +381,7 @@ function drawLine(ctx, x, y, xEnd, yEnd, color) {
     ctx.stroke();
 
     ctx.strokeStyle = "#000";
+    drawCallsCount += 1;
 }
 
 
@@ -386,24 +404,24 @@ function handleKeyUp(event) {
 
 function handleKeys() {
 
-    if (currentlyPressedKeys[87]) {
+    if (currentlyPressedKeys[87] || currentlyPressedKeys[38]) {
       // W
         player.x += Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
         player.y += Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
     }
 
-    if (currentlyPressedKeys[83]) {
+    if (currentlyPressedKeys[83] || currentlyPressedKeys[40]) {
       // S
         player.x -= Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
         player.y -= Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
     }
 
-    if (currentlyPressedKeys[65]) {
+    if (currentlyPressedKeys[65] || currentlyPressedKeys[37]) {
       // A
       player.rotation += 5.1;
     }
 
-    if (currentlyPressedKeys[68]) {
+    if (currentlyPressedKeys[68] || currentlyPressedKeys[39]) {
       // D
       player.rotation -= 5.1;
     }

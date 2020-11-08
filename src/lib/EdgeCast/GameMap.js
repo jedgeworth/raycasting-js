@@ -22,8 +22,6 @@ module.exports = class GameMap{
         this.mapRects = [];
 
         this.initMap();
-
-        console.log(this);
     }
 
     initMap() {
