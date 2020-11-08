@@ -6,12 +6,17 @@ A javascript port of a raycasting application I wrote in 2009 using C#.
 ## Table of Contents
 
 - [Features](#features)
+- [Demo](#demo)
 - [Usage](#usage)
 - [Credits](#credits)
 
 ## Features
 
 * Very basic raycasting.
+
+## Demo
+
+[Live demo](https://jamesedgeworth.com/demo/raycasting/)
 
 ## Usage
 
