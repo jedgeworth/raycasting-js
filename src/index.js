@@ -29,8 +29,8 @@ const rayLengths = [];          // Float[]
 const rayTexCoords = [];        // Int[]
 const rayWallShades = [];
 
-const mapPixelSize = 640;
-const mapResolution = 64;
+const mapPixelSize = 320;
+const mapResolution = 32;
 
 const mapData = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -79,7 +79,6 @@ document.getElementById('renderAllRays').addEventListener('change', (event) => {
 
 
 
-
 /**
  * Setup any objects.
  */
@@ -89,9 +88,9 @@ function initWorld() {
     projectionPlane = new ProjectionPlane(320, 200, 60);
 
     player = new Player();
-    player.x = 96.0;
-    player.y = 224.0;
-    player.rotation = 60.0;
+    player.x = 46.0;
+    player.y = 124.0;
+    player.rotation = 310.0;
 
 
     for (let i = 0; i < projectionPlane.width; i += 1) {
@@ -386,6 +385,36 @@ function drawLine(ctx, x, y, xEnd, yEnd, color) {
 
 
 
+function moveForward() {
+    player.x += Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+    player.y += Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+}
+
+function moveBackward() {
+    player.x -= Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+    player.y -= Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+}
+
+function wrapRotation(){
+    if (player.rotation >= 360.0) {
+        player.rotation -= 360.0;
+    }
+
+    if (player.rotation < 0.0) {
+        player.rotation += 360.0;
+    }
+}
+
+function rotateLeft() {
+    player.rotation += 5.1;
+    wrapRotation();
+}
+
+function rotateRight() {
+    player.rotation -= 5.1;
+    wrapRotation();
+}
+
 
 /**
  * Handle keypresses.
@@ -406,31 +435,69 @@ function handleKeys() {
 
     if (currentlyPressedKeys[87] || currentlyPressedKeys[38]) {
       // W
-        player.x += Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
-        player.y += Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+    moveForward();
     }
 
     if (currentlyPressedKeys[83] || currentlyPressedKeys[40]) {
       // S
-        player.x -= Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
-        player.y -= Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+        moveBackward();
     }
 
     if (currentlyPressedKeys[65] || currentlyPressedKeys[37]) {
       // A
-      player.rotation += 5.1;
+        rotateLeft();
     }
 
     if (currentlyPressedKeys[68] || currentlyPressedKeys[39]) {
       // D
-      player.rotation -= 5.1;
+        rotateRight();
     }
 
-    if (player.rotation >= 360.0) {
-        player.rotation -= 360.0;
-    }
 
-    if (player.rotation < 0.0) {
-        player.rotation += 360.0;
-    }
   }
+
+document.getElementById('up').addEventListener('mousedown', (e) => {
+    currentlyPressedKeys[38] = true;
+});
+
+document.getElementById('up').addEventListener('touchstart', (e) => {
+    currentlyPressedKeys[38] = true;
+});
+
+document.getElementById('down').addEventListener('mousedown', (e) => {
+    currentlyPressedKeys[40] = true;
+});
+
+document.getElementById('down').addEventListener('touchstart', (e) => {
+    currentlyPressedKeys[40] = true;
+});
+
+document.getElementById('left').addEventListener('mousedown', (e) => {
+    currentlyPressedKeys[37] = true;
+});
+
+document.getElementById('left').addEventListener('touchstart', (e) => {
+    currentlyPressedKeys[37] = true;
+});
+
+document.getElementById('right').addEventListener('mousedown', (e) => {
+    currentlyPressedKeys[39] = true;
+});
+
+document.getElementById('right').addEventListener('touchstart', (e) => {
+    currentlyPressedKeys[39] = true;
+});
+
+window.addEventListener('mouseup', function(event){
+    currentlyPressedKeys[37] = false;
+    currentlyPressedKeys[38] = false;
+    currentlyPressedKeys[39] = false;
+    currentlyPressedKeys[40] = false;
+});
+
+// window.addEventListener('touchend', function(event){
+//     currentlyPressedKeys[37] = false;
+//     currentlyPressedKeys[38] = false;
+//     currentlyPressedKeys[39] = false;
+//     currentlyPressedKeys[40] = false;
+// });

@@ -36,9 +36,15 @@ button{
 
 .row{
     display:flex;
+    flex-wrap:wrap;
+    margin:2rem;
 }
 
-.col{
+.col-left{
+    width:320px;
+}
+
+.col-right{
     width:50%;
 }
 
@@ -49,10 +55,17 @@ button{
 }
 
 #map{
-    width:640px;
-    height:640px;
+    width:320px;
+    height:320px;
 }
 
+.keys{
+    margin-top:2rem;
+}
+
+.keys > button{
+    margin: 0 .5rem;
+}
 
 .controls{
     margin-top:4rem;

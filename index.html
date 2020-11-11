@@ -15,17 +15,29 @@
 <body>
 
     <div class="row">
-        <canvas id="viewport" width="320" height="200"></canvas>
-        <canvas id="map" width="640" height="640"></canvas>
+        <div class="col-left">
+            <canvas id="viewport" width="320" height="200"></canvas>
+            <div class="keys">
+                <button id="left">&lt;</button>
+                <button id="up">/\</button>
+                <button id="down">\/</button>
+                <button id="right">&gt;</button>
+
+                <div class="controls">
+                    <input id="renderAllRays" type="checkbox" value="1">
+                    <label for="renderAllRays"> Render all rays</label>
+                </div>
+
+                <p>Draw calls: <span id="drawCallsCount">0</span></p>
+            </div>
+        </div>
+        <div class="col-right">
+        <canvas id="map" width="320" height="320"></canvas>
+        </div>
     </div>
 
 
-    <div class="controls">
-        <input id="renderAllRays" type="checkbox" value="1">
-        <label for="renderAllRays"> Render all rays</label>
-    </div>
 
-    <p>Draw calls: <span id="drawCallsCount">0</span></p>
 
 </body>
 </html>
