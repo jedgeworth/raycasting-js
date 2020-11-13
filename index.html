@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <title>edge-raycasting</title>
     <!-- Mobile header color for Chrome, Firefox OS and Opera -->
     <meta name="theme-color" content="#ff4970">
@@ -21,10 +21,12 @@
         <div class="col-left">
             <canvas id="viewport" width="320" height="200"></canvas>
             <div class="keys">
-                <button id="left">&lt;</button>
-                <button id="up">/\</button>
-                <button id="down">\/</button>
-                <button id="right">&gt;</button>
+                <button id="left">&#8592;</button>
+                <button id="up">&#8593;</button>
+                <button id="down">&#8595;</button>
+                <button id="right">&#8594;</button>
+
+                <i style="display:block;">(Or use arrow keys, or W A S D)</i>
 
                 <div class="controls">
                     <input id="renderAllRays" type="checkbox" value="1">

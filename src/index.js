@@ -88,8 +88,9 @@ function initWorld() {
     projectionPlane = new ProjectionPlane(320, 200, 60);
 
     player = new Player();
-    player.x = 46.0;
-    player.y = 124.0;
+    player.newPosition.x = 46.0;
+    player.newPosition.y = 124.0;
+    player.acceptMove();
     player.rotation = 310.0;
 
 
@@ -386,13 +387,26 @@ function drawLine(ctx, x, y, xEnd, yEnd, color) {
 
 
 function moveForward() {
-    player.x += Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
-    player.y += Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+
+    player.newPosition.x += Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+    player.newPosition.y += Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+
+    if (!gameMap.testHit(player.newPosition)) {
+        player.acceptMove();
+    } else {
+        player.cancelMove();
+    }
 }
 
 function moveBackward() {
-    player.x -= Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
-    player.y -= Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+    player.newPosition.x -= Math.sin(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+    player.newPosition.y -= Math.cos(projectionPlane.toRadians(player.rotation + 90)) * 5.0;
+
+    if (!gameMap.testHit(player.newPosition)) {
+        player.acceptMove();
+    } else {
+        player.cancelMove();
+    }
 }
 
 function wrapRotation(){
